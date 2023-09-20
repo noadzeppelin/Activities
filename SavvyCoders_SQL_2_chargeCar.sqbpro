@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Stewby doobie doo/code/SavvyCoders/Activities/SavvyCoders_SQL_2_chargeCar.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2126"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,10:mainfactCharge"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="dimCar" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="52"/><column index="2" value="75"/><column index="3" value="152"/><column index="4" value="73"/><column index="5" value="115"/><column index="6" value="82"/><column index="7" value="127"/><column index="8" value="125"/><column index="9" value="96"/><column index="10" value="90"/><column index="11" value="107"/><column index="12" value="82"/><column index="13" value="73"/><column index="14" value="53"/><column index="15" value="78"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="dimUser" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="63"/><column index="2" value="96"/><column index="3" value="108"/><column index="4" value="52"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="factCharge" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="79"/><column index="2" value="63"/><column index="3" value="74"/><column index="4" value="55"/><column index="5" value="129"/><column index="6" value="129"/><column index="7" value="94"/><column index="8" value="85"/><column index="9" value="113"/><column index="10" value="75"/><column index="11" value="104"/><column index="12" value="77"/><column index="13" value="82"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="Breakout_8.1.2.sql">--Find the average Charge Time Hrs per year by Car Make. Answer should include Year, ChargeTimeHrs, and carMake
+SELECT DISTINCT dimCar.carMake, substr(factCharge.dateCreated,0,5) as 'Year', round(avg(factCharge.chargeTimeHrs), 2)   
+FROM factCharge 
+INNER JOIN dimUser 
+ON factCharge.userID = dimUser.userId
+LEFT JOIN dimcar 
+ON dimUser.carID = dimCar.carID
+GROUP BY 1
+HAVING carMake IS NOT NULL
+ORDER BY 3 DESC;
+
+
+
+--The EVCHarging Company you work for is expanding operations abroad. Add a Column to dimUser called &quot;Country&quot; with all values equal to &quot;USA&quot;. Drop DistanceHome from the table. Select and display the final results of your table</sql><sql name="Breakout_8.1.sql">
+--1. Use LEFT JOIN and join `factcharge` and `dimFacility` together. Select all of the rows and order the output by `typeFacility`.
+-- SELECT *
+-- FROM factCharge
+-- LEFT JOIN dimFacility
+-- ON factCharge.facilityID = dimFacility.FacilityKey
+-- ORDER BY typeFacility;
+
+--2. Use INNER JOIN to join`factCharge` and `DimUser`, and add a second join in the query and LEFT JOIN `dimCar`. Select the distinct users, make, Model, and  the price in Euros multiplied by 1.09--&gt; name this column `priceUSD`.
+
+SELECT DISTINCT factCharge.userId, dimCar.carMake, dimCar.carModel, (1.09 * dimCar.priceEuro) as 'USD_price'
+FROM factCharge 
+INNER JOIN dimUser 
+ON factCharge.userID = dimUser.userId
+LEFT JOIN dimcar 
+ON dimUser.carID = dimCar.carID
+GROUP BY factCharge.userId
+HAVING carMake is not null;
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
